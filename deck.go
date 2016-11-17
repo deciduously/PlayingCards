@@ -1,5 +1,5 @@
-//Package PlayingCards contains structures and functions implementing a standard deck of playing cards
-package PlayingCards
+//Package playingcards implements a standard deck of playing cards
+package playingcards
 
 import (
 	"math/rand"
@@ -38,7 +38,7 @@ func NewDeck() Stack {
 	return deck
 }
 
-//Draw draws n cards off of Stack d, returns created Stack stack, and the smaller Stack f
+//Draw draws n cards off of Stack d, returns created Stack stack, and the now smaller Stack f
 func (d Stack) Draw(n int) (stack Stack, f Stack) {
 	stack = make(Stack, 0)
 	for i := 0; i < n; i++ {
