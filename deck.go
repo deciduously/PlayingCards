@@ -18,14 +18,14 @@ type Card struct {
 type Stack []Card
 
 //Suit represents one of the four suits
-type Suit string
+type Suit uint8
 
 //The four suits
 const (
-	Clubs    Suit = "c"
-	Hearts   Suit = "h"
-	Diamonds Suit = "d"
-	Spades   Suit = "s"
+	Clubs    Suit = 0x1
+	Hearts   Suit = 0x2
+	Diamonds Suit = 0x3
+	Spades   Suit = 0x4
 )
 
 //Draw draws n cards off of Stack d, returns created Stack stack, and the now smaller Stack f
