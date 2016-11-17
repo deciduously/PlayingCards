@@ -2,7 +2,7 @@
 package playingcards
 
 import (
-  "errors"
+	"fmt"
 	"math/rand"
 	"time"
 )
@@ -27,6 +27,53 @@ const (
 	Spades   Suit = "s"
 )
 
+//Display returns a string containing the Card info for output
+func (c Card) Display() {
+	val := ""
+  suit := ""
+	switch c.value {
+	case 0xa:
+		val = "10"
+	case 0xb:
+		val = "Jack"
+	case 0xc:
+		val = "Queen"
+	case 0xd:
+		val = "King"
+	case 0x1:
+		val = "Ace"
+	default:
+		val = string(c.value)
+	}
+
+  switch c.suit {
+  case Clubs:
+    suit = "Clubs"
+    case Hearts:
+    suit = "Hearts"
+    case Diamonds:
+    suit = "Diamonds"
+    case Spades:
+    suit = "Spades"
+  }
+  fmt.Println(val + " of " + suit)
+}
+
+//Draw draws n cards off of Stack d, returns created Stack stack, and the now smaller Stack f
+//If n > len(d) or n < 1, it simply returns an empty Stack and Stack d untouched, as well as an error
+func (d Stack) Draw(n int) (stack Stack, f Stack, e error) {
+	stack = make(Stack, 0)
+	if n > len(d) || n < 1 {
+		e = fmt.Errorf("Could not draw %v from stack of size %v", n, len(d))
+		return stack, d, e
+	}
+	for i := 0; i < n; i++ {
+		stack = append(stack, d[i])
+	}
+	f = d[n:]
+	return stack, f, nil
+}
+
 //NewDeck returns a new deck, consisting of a Stack of 52 Cards
 func NewDeck() Stack {
 	deck := make(Stack, 0)
@@ -37,21 +84,6 @@ func NewDeck() Stack {
 		}
 	}
 	return deck
-}
-
-//Draw draws n cards off of Stack d, returns created Stack stack, and the now smaller Stack f
-//If n > len(d) or n < 1, it simply returns an empty Stack and Stack d untouched, as well as an error
-func (d Stack) Draw(n int) (stack Stack, f Stack, e error) {
-  stack = make(Stack, 0)
-  if n > len(d) || n < 1 {
-    e = errors.New("Could not draw from stack")
-    return stack, d, e
-  }
-	for i := 0; i < n; i++ {
-		stack = append(stack, d[i])
-	}
-	f = d[n:]
-	return stack, f, nil
 }
 
 //Shuffle shuffles Stack d
