@@ -3,6 +3,7 @@ package PlayingCards
 
 import (
 	"math/rand"
+  "time"
 )
 
 //Card represents a single card
@@ -19,10 +20,10 @@ type Suit string
 
 //The four suits
 const (
-	Clubs    Suit = "clubs"
-	Hearts   Suit = "hearts"
-	Diamonds Suit = "diamonds"
-	Spades   Suit = "spades"
+	Clubs    Suit = "c"
+	Hearts   Suit = "h"
+	Diamonds Suit = "d"
+	Spades   Suit = "s"
 )
 
 //NewDeck returns a new deck, consisting of a Stack of 52 Cards
@@ -37,17 +38,19 @@ func NewDeck() Stack {
 	return deck
 }
 
-/*
+
 //Deal deals n cards off of Stack d
 func (d Stack) Deal (n uint) {
 
 }
-*/
+
 
 //Shuffle shuffles Stack d
 func (d Stack) Shuffle() {
+  s := rand.NewSource(time.Now().UnixNano())
+  r := rand.New(s)
 	for i := range d {
-		j := rand.Intn(i + 1)
+		j := r.Intn(i + 1)
 		d[i], d[j] = d[j], d[i]
 	}
 }
