@@ -1,14 +1,18 @@
 //Package PlayingCards contains structures and functions implementing a standard deck of playing cards
 package PlayingCards
 
+import (
+	"math/rand"
+)
+
 //Card represents a single card
 type Card struct {
 	value uint8
 	suit  Suit
 }
 
-//Deck represents a deck of Cards
-type Deck []Card
+//Stack represents a stack of Cards
+type Stack []Card
 
 //Suit represents one of the four suits
 type Suit string
@@ -21,9 +25,9 @@ const (
 	Spades   Suit = "spades"
 )
 
-//NewDeck returns a new Deck of Cards,
-func NewDeck() Deck {
-	deck := make(Deck, 0)
+//NewDeck returns a new deck, consisting of a Stack of 52 Cards
+func NewDeck() Stack {
+	deck := make(Stack, 0)
 	suits := []Suit{Clubs, Hearts, Diamonds, Spades}
 	for _, i := range suits {
 		for j := 1; j <= 13; j++ {
@@ -34,8 +38,16 @@ func NewDeck() Deck {
 }
 
 /*
-//ShuffleDeck shuffles and returns Deck
-func ShuffleDeck(d *Deck) {
+//Deal deals n cards off of Stack d
+func (d Stack) Deal (n uint) {
 
 }
 */
+
+//Shuffle shuffles Stack d
+func (d Stack) Shuffle() {
+	for i := range d {
+		j := rand.Intn(i + 1)
+		d[i], d[j] = d[j], d[i]
+	}
+}
