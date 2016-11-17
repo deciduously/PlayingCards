@@ -39,8 +39,12 @@ func NewDeck() Stack {
 }
 
 //Draw draws n cards off of Stack d, returns created Stack stack, and the now smaller Stack f
+//If n > len(d) or n < 1, it simply returns an empty Stack and Stack d untouched, it's up to the caller to handle this for now.
 func (d Stack) Draw(n int) (stack Stack, f Stack) {
-	stack = make(Stack, 0)
+  stack = make(Stack, 0)
+  if n > len(d) || n < 1 {
+    return stack, d 
+  }
 	for i := 0; i < n; i++ {
 		stack = append(stack, d[i])
 	}
