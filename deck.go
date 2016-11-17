@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+  "strconv"
 )
 
 //Card represents a single card
@@ -26,38 +27,6 @@ const (
 	Diamonds Suit = "d"
 	Spades   Suit = "s"
 )
-
-//Display returns a string containing the Card info for output
-func (c Card) Display() {
-	val := ""
-  suit := ""
-	switch c.value {
-	case 0xa:
-		val = "10"
-	case 0xb:
-		val = "Jack"
-	case 0xc:
-		val = "Queen"
-	case 0xd:
-		val = "King"
-	case 0x1:
-		val = "Ace"
-	default:
-		val = string(c.value)
-	}
-
-  switch c.suit {
-  case Clubs:
-    suit = "Clubs"
-    case Hearts:
-    suit = "Hearts"
-    case Diamonds:
-    suit = "Diamonds"
-    case Spades:
-    suit = "Spades"
-  }
-  fmt.Println(val + " of " + suit)
-}
 
 //Draw draws n cards off of Stack d, returns created Stack stack, and the now smaller Stack f
 //If n > len(d) or n < 1, it simply returns an empty Stack and Stack d untouched, as well as an error
@@ -84,6 +53,38 @@ func NewDeck() Stack {
 		}
 	}
 	return deck
+}
+
+//Readable returns a string containing the Card info for output
+func (c Card) Readable() (s string) {
+	val := ""
+  suit := ""
+	switch c.value {
+	case 0xa:
+		val = "10"
+	case 0xb:
+		val = "Jack"
+	case 0xc:
+		val = "Queen"
+	case 0xd:
+		val = "King"
+	case 0x1:
+		val = "Ace"
+	default:
+		val = strconv.Itoa(int(c.value))
+	}
+
+  switch c.suit {
+  case Clubs:
+    suit = "Clubs"
+    case Hearts:
+    suit = "Hearts"
+    case Diamonds:
+    suit = "Diamonds"
+    case Spades:
+    suit = "Spades"
+  }
+  return val + " of " + suit
 }
 
 //Shuffle shuffles Stack d
