@@ -3,7 +3,7 @@ package PlayingCards
 
 import (
 	"math/rand"
-  "time"
+	"time"
 )
 
 //Card represents a single card
@@ -38,17 +38,20 @@ func NewDeck() Stack {
 	return deck
 }
 
-
-//Deal deals n cards off of Stack d
-func (d Stack) Deal (n uint) {
-
+//Draw draws n cards off of Stack d, returns created Stack stack, and the smaller Stack f
+func (d Stack) Draw(n int) (stack Stack, f Stack) {
+	stack = make(Stack, 0)
+	for i := 0; i < n; i++ {
+		stack = append(stack, d[i])
+	}
+	f = d[n:]
+	return stack, f
 }
-
 
 //Shuffle shuffles Stack d
 func (d Stack) Shuffle() {
-  s := rand.NewSource(time.Now().UnixNano())
-  r := rand.New(s)
+	s := rand.NewSource(time.Now().UnixNano())
+	r := rand.New(s)
 	for i := range d {
 		j := r.Intn(i + 1)
 		d[i], d[j] = d[j], d[i]
