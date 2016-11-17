@@ -2,6 +2,7 @@
 package playingcards
 
 import (
+  "errors"
 	"math/rand"
 	"time"
 )
@@ -39,17 +40,18 @@ func NewDeck() Stack {
 }
 
 //Draw draws n cards off of Stack d, returns created Stack stack, and the now smaller Stack f
-//If n > len(d) or n < 1, it simply returns an empty Stack and Stack d untouched, it's up to the caller to handle this for now.
-func (d Stack) Draw(n int) (stack Stack, f Stack) {
+//If n > len(d) or n < 1, it simply returns an empty Stack and Stack d untouched, as well as an error
+func (d Stack) Draw(n int) (stack Stack, f Stack, e error) {
   stack = make(Stack, 0)
   if n > len(d) || n < 1 {
-    return stack, d 
+    e = errors.New("Could not draw from stack")
+    return stack, d, e
   }
 	for i := 0; i < n; i++ {
 		stack = append(stack, d[i])
 	}
 	f = d[n:]
-	return stack, f
+	return stack, f, nil
 }
 
 //Shuffle shuffles Stack d
