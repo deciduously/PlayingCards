@@ -32,11 +32,11 @@ const (
 
 //Draw draws n cards off of Deck d, returns created Deck Deck, and the now smaller Deck f
 //If n > len(d) or n < 1, it simply returns an empty Deck and Deck d untouched, as well as an error
-func (d *Deck) Draw(n int) (deck Deck, e error) {
-	ret := Deck{}
+func (d *Deck) Draw(n int) (ret Deck, e error) {
+	ret = Deck{}
 	if n > d.Len() || n < 1 {
 		e = fmt.Errorf("Could not draw %v from Deck of size %v", n, d.Len())
-		return deck, e
+		return ret, e
 	}
 	for i := 0; i < n; i++ {
 		ret.Push(d.Pop())
@@ -44,13 +44,19 @@ func (d *Deck) Draw(n int) (deck Deck, e error) {
 	return ret, nil
 }
 
+//Empty return true if Deck d is empty, otherwise false
+func (d Deck) Empty() bool {
+	return d.Len() == 0
+}
+
 //Len returns to size of the Deck
 func (d *Deck) Len() int {
   return len(d.Cards)
 }
 
+
 //NewDeck returns a new deck, consisting of a Deck of 52 Cards
-func NewDeck() *Deck {
+func NewDeck() Deck {
 	d := Deck{}
 	suits := []Suit{Clubs, Hearts, Diamonds, Spades}
 	for _, i := range suits {
@@ -58,14 +64,19 @@ func NewDeck() *Deck {
 			d.Push(Card{uint8(j), i})
 		}
 	}
-	return &d
+	return d
+}
+
+//Peek returns the top card of Deck d
+func (d Deck) Peek() Card {
+	return d.Cards[d.Len() -1]
 }
 
 //Pop pops the top card from the Deck
 func (d *Deck) Pop() Card {
-  ret := d.Cards[len(d.Cards)-1]
+  c := d.Cards[len(d.Cards)-1]
   d.Cards = d.Cards[:len(d.Cards)-1]
-  return ret
+  return c
 }
 
 //Push pushes a Card to a Deck
