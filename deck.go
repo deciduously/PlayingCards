@@ -10,12 +10,14 @@ import (
 
 //Card represents a single card
 type Card struct {
-	value uint8
-	suit  Suit
+	Value uint8
+	Suit  Suit
 }
 
-//Stack represents a stack of Cards
-type Stack []Card
+//Deck represents a Deck of Cards as a LIFO stack
+type Deck struct {
+  Cards []Card
+}
 
 //Suit represents one of the four suits
 type Suit uint8
@@ -28,38 +30,54 @@ const (
 	Spades   Suit = 0x73
 )
 
-//Draw draws n cards off of Stack d, returns created Stack stack, and the now smaller Stack f
-//If n > len(d) or n < 1, it simply returns an empty Stack and Stack d untouched, as well as an error
-func (d Stack) Draw(n int) (stack Stack, f Stack, e error) {
-	stack = make(Stack, 0)
-	if n > len(d) || n < 1 {
-		e = fmt.Errorf("Could not draw %v from stack of size %v", n, len(d))
-		return stack, d, e
+//Draw draws n cards off of Deck d, returns created Deck Deck, and the now smaller Deck f
+//If n > len(d) or n < 1, it simply returns an empty Deck and Deck d untouched, as well as an error
+func (d *Deck) Draw(n int) (deck Deck, e error) {
+	ret := Deck{}
+	if n > d.Len() || n < 1 {
+		e = fmt.Errorf("Could not draw %v from Deck of size %v", n, d.Len())
+		return deck, e
 	}
 	for i := 0; i < n; i++ {
-		stack = append(stack, d[i])
+		ret.Push(d.Pop())
 	}
-	f = d[n:]
-	return stack, f, nil
+	return ret, nil
 }
 
-//NewDeck returns a new deck, consisting of a Stack of 52 Cards
-func NewDeck() Stack {
-	deck := make(Stack, 0)
+//Len returns to size of the Deck
+func (d *Deck) Len() int {
+  return len(d.Cards)
+}
+
+//NewDeck returns a new deck, consisting of a Deck of 52 Cards
+func NewDeck() *Deck {
+	d := Deck{}
 	suits := []Suit{Clubs, Hearts, Diamonds, Spades}
 	for _, i := range suits {
 		for j := 1; j <= 13; j++ {
-			deck = append(deck, Card{uint8(j), i})
+			d.Push(Card{uint8(j), i})
 		}
 	}
-	return deck
+	return &d
+}
+
+//Pop pops the top card from the Deck
+func (d *Deck) Pop() Card {
+  ret := d.Cards[len(d.Cards)-1]
+  d.Cards = d.Cards[:len(d.Cards)-1]
+  return ret
+}
+
+//Push pushes a Card to a Deck
+func (d *Deck) Push(c Card) {
+  d.Cards = append(d.Cards, c)
 }
 
 //Readable returns a string containing the Card info for output
-func (c Card) Readable() (s string) {
+func (c Card) Readable() string {
 	val := ""
   suit := ""
-	switch c.value {
+	switch c.Value {
 	case 0xa:
 		val = "10"
 	case 0xb:
@@ -71,10 +89,10 @@ func (c Card) Readable() (s string) {
 	case 0x1:
 		val = "Ace"
 	default:
-		val = strconv.Itoa(int(c.value))
+		val = strconv.Itoa(int(c.Value))
 	}
 
-  switch c.suit {
+  switch c.Suit {
   case Clubs:
     suit = "Clubs"
     case Hearts:
@@ -87,12 +105,12 @@ func (c Card) Readable() (s string) {
   return val + " of " + suit
 }
 
-//Shuffle shuffles Stack d
-func (d Stack) Shuffle() {
+//Shuffle shuffles Deck d
+func (d *Deck) Shuffle() {
 	s := rand.NewSource(time.Now().UnixNano())
 	r := rand.New(s)
-	for i := range d {
+	for i := range d.Cards {
 		j := r.Intn(i + 1)
-		d[i], d[j] = d[j], d[i]
+		d.Cards[i], d.Cards[j] = d.Cards[j], d.Cards[i]
 	}
 }
