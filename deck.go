@@ -4,8 +4,8 @@ package playingcards
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
 	"time"
-  "strconv"
 )
 
 //Card represents a single card
@@ -16,7 +16,7 @@ type Card struct {
 
 //Deck represents a Deck of Cards as a LIFO stack
 type Deck struct {
-  Cards []Card
+	Cards []Card
 }
 
 //Suit represents one of the four suits
@@ -51,9 +51,8 @@ func (d Deck) Empty() bool {
 
 //Len returns to size of the Deck
 func (d *Deck) Len() int {
-  return len(d.Cards)
+	return len(d.Cards)
 }
-
 
 //NewDeck returns a new deck, consisting of a Deck of 52 Cards
 func NewDeck() Deck {
@@ -69,25 +68,25 @@ func NewDeck() Deck {
 
 //Peek returns the top card of Deck d
 func (d Deck) Peek() Card {
-	return d.Cards[d.Len() -1]
+	return d.Cards[d.Len()-1]
 }
 
 //Pop pops the top card from the Deck
 func (d *Deck) Pop() Card {
-  c := d.Cards[len(d.Cards)-1]
-  d.Cards = d.Cards[:len(d.Cards)-1]
-  return c
+	c := d.Cards[len(d.Cards)-1]
+	d.Cards = d.Cards[:len(d.Cards)-1]
+	return c
 }
 
 //Push pushes a Card to a Deck
 func (d *Deck) Push(c Card) {
-  d.Cards = append(d.Cards, c)
+	d.Cards = append(d.Cards, c)
 }
 
 //Readable returns a string containing the Card info for output
 func (c Card) Readable() string {
 	val := ""
-  suit := ""
+	suit := ""
 	switch c.Value {
 	case 0xa:
 		val = "10"
@@ -103,17 +102,25 @@ func (c Card) Readable() string {
 		val = strconv.Itoa(int(c.Value))
 	}
 
-  switch c.Suit {
-  case Clubs:
-    suit = "Clubs"
-    case Hearts:
-    suit = "Hearts"
-    case Diamonds:
-    suit = "Diamonds"
-    case Spades:
-    suit = "Spades"
-  }
-  return val + " of " + suit
+	switch c.Suit {
+	case Clubs:
+		suit = "Clubs"
+	case Hearts:
+		suit = "Hearts"
+	case Diamonds:
+		suit = "Diamonds"
+	case Spades:
+		suit = "Spades"
+	}
+	return val + " of " + suit
+}
+
+//Remove removes Card c from Deck d.  If card not found, d remains untouched
+func (d *Deck) Remove(c Card) {
+	i, e := d.getIndex(c)
+	if e == nil {
+			d.Cards = append(d.Cards[:i], d.Cards[i + 1:]...)
+	}
 }
 
 //Shuffle shuffles Deck d
@@ -124,4 +131,15 @@ func (d *Deck) Shuffle() {
 		j := r.Intn(i + 1)
 		d.Cards[i], d.Cards[j] = d.Cards[j], d.Cards[i]
 	}
+}
+
+//getIndex is not exported, returns the index of Card c in Deck d if eists, or -1 if not
+func (d Deck) getIndex(c Card) (i int, e error) {
+	for i, v := range d.Cards {
+		if v == c {
+			return i, nil
+		}
+	}
+	e = fmt.Errorf("No such card in deck")
+	return -1, e
 }
