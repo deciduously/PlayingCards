@@ -119,7 +119,7 @@ func (c Card) Readable() string {
 func (d *Deck) Remove(c Card) {
 	i, e := d.getIndex(c)
 	if e == nil {
-			d.Cards = append(d.Cards[:i], d.Cards[i + 1:]...)
+		d.Cards = append(d.Cards[:i], d.Cards[i+1:]...)
 	}
 }
 
